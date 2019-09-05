@@ -1,0 +1,6 @@
+framework module Pods_AALRUCache_Tests {
+  umbrella header "Pods-AALRUCache_Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'AALRUCache_Example' do
+  pod 'AALRUCache', :path => '../'
+
+  target 'AALRUCache_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

@@ -1,0 +1,16 @@
+PODS:
+  - AALRUCache (0.1.0)
+
+DEPENDENCIES:
+  - AALRUCache (from `../`)
+
+EXTERNAL SOURCES:
+  AALRUCache:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  AALRUCache: c17373dbd430b2ae938bcd37bcf066508aea0e02
+
+PODFILE CHECKSUM: c7cd397e321c4b9de48a5808ec3837f5439ecef0
+
+COCOAPODS: 1.7.5

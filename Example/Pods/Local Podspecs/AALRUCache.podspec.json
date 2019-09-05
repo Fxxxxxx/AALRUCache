@@ -1,0 +1,22 @@
+{
+  "name": "AALRUCache",
+  "version": "0.1.0",
+  "summary": "A short description of AALRUCache.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/Aaron Feng/AALRUCache",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "Aaron Feng": "516674612@qq.com"
+  },
+  "source": {
+    "git": "https://github.com/Aaron Feng/AALRUCache.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "AALRUCache/Classes/**/*"
+}
