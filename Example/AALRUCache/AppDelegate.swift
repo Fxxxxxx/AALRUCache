@@ -57,9 +57,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 }
-
-extension Int: AAEqual {
-    public func equal(_ a: Int) -> Bool {
-        return self == a
-    }
-}

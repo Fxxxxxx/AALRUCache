@@ -5,7 +5,7 @@
 //  Created by cztv on 2019/9/5.
 //
 
-public class AALRUCache<K: Hashable, V: AAEqual> {
+public class AALRUCache<K: Hashable, V: Equatable> {
     typealias Node = ListNode<K, V>
     private var dic = [K: Node]()
     private var head: Node?
@@ -108,7 +108,7 @@ public extension AALRUCache {
     
     func key(for value: V) -> K? {
         return dic.first(where: { (set) -> Bool in
-            return value.equal(set.value.val)
+            return value == set.value.val
         })?.key
     }
 }
