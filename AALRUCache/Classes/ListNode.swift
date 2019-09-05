@@ -15,3 +15,7 @@ public class ListNode<K, V> {
         self.val = val
     }
 }
+
+public protocol AAEqual {
+    func equal(_ a: Self) -> Bool
+}
