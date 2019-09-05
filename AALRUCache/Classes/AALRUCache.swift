@@ -106,7 +106,7 @@ public extension AALRUCache {
         return nil
     }
     
-    func index(for value: V) -> K? {
+    func key(for value: V) -> K? {
         return dic.first(where: { (set) -> Bool in
             return value.equal(set.value.val)
         })?.key
