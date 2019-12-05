@@ -10,20 +10,26 @@ public class AALRUCache<K: Hashable, V: Equatable> {
     private var dic = [K: Node]()
     private var head: Node?
     private var tail: Node?
-    private var maxCount = 0
+    private let maxCount: Int!
+    private let lock = NSLock.init()
+    
     public init(_ capacity: Int) {
         maxCount = capacity
     }
     
     public func get(_ key: K) -> V? {
+        lock.lock()
         if let node = dic[key] {
             bringToFirst(node)
+            lock.unlock()
             return node.val
         }
+        lock.unlock()
         return nil
     }
     
     public func put(_ key: K, _ value: V) {
+        lock.lock()
         if let node = dic[key] {
             node.val = value
             bringToFirst(node)
@@ -42,6 +48,7 @@ public class AALRUCache<K: Hashable, V: Equatable> {
                 tail = head
             }
         }
+        lock.unlock()
     }
     
     private func bringToFirst(_ node: Node) {
@@ -82,13 +89,16 @@ public extension AALRUCache {
     }
     
     func removeAll() {
+        lock.lock()
         dic.removeAll()
         head = nil
         tail = nil
+        lock.unlock()
     }
     
     @discardableResult
     func remove(_ key: K) -> V? {
+        lock.lock()
         if let node = dic[key] {
             if head === node {
                 head = node.next
@@ -101,14 +111,37 @@ public extension AALRUCache {
                 node.next?.pre = node.pre
             }
             dic.removeValue(forKey: key)
+            lock.unlock()
             return node.val
         }
+        lock.unlock()
         return nil
     }
     
     func key(for value: V) -> K? {
-        return dic.first(where: { (set) -> Bool in
+        lock.lock()
+        let result = dic.first(where: { (set) -> Bool in
             return value == set.value.val
         })?.key
+        lock.unlock()
+        return result
+    }
+}
+
+extension AALRUCache {
+    //这三个参数非线程安全，不会阻塞读取线程
+    public var count: Int {
+        return dic.count
+    }
+    
+    public var keys: [K] {
+        return Array(dic.keys)
+    }
+    
+    public var values: [V] {
+        let arr = dic.values.map { (node) -> V in
+            node.val
+        }
+        return arr
     }
 }

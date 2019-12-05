@@ -18,18 +18,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     internal func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        let cache = AALRUCache<Int, Int>.init(2)
-        cache[10] = 10
-        cache[9] = 9
-        cache[8] = 8
-        cache.append(7, 7)
-        cache.put(6, 6)
-        let a = cache[7]
-        print(a ?? -1)
-        cache[7] = nil
-        print(cache[7] ?? -1)
-        print(cache[6] ?? -1)
-        print(cache[8] ?? -1)
+        let cache = AALRUCache<Int, Int>.init(10)
+        let group = DispatchGroup.init()
+        for i in 0...10000 {
+            DispatchQueue.global().async(group: group) {
+                print(cache[i] ?? -1)
+                cache.remove(i)
+                cache[i] = i
+                cache.append(i, i)
+                print(cache.get(i) ?? -1)
+            }
+        }
+        group.notify(queue: DispatchQueue.global()) {
+            print("读写完成，剩余数量：\(cache.values.count)，当前数据：\(cache.values)")
+        }
+        print("运行完成，未死锁，数量：\(cache.count)")
+        cache.removeAll()
+        print("清除完成，数量\(cache.count)")
         return true
     }
 
