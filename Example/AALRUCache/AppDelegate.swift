@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     internal func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
+        let now = CACurrentMediaTime()
         let cache = AALRUCache<Int, Int>.init(10)
         let group = DispatchGroup.init()
         for i in 0...10000 {
@@ -31,6 +32,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         group.notify(queue: DispatchQueue.global()) {
             print("读写完成，剩余数量：\(cache.values.count)，当前数据：\(cache.values)")
+            let end = CACurrentMediaTime()
+            print("共用时：\(end - now)")
         }
         print("运行完成，未死锁，数量：\(cache.count)")
         cache.removeAll()

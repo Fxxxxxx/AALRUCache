@@ -129,19 +129,26 @@ public extension AALRUCache {
 }
 
 extension AALRUCache {
-    //这三个参数非线程安全，不会阻塞读取线程
     public var count: Int {
-        return dic.count
+        lock.lock()
+        let count = dic.count
+        lock.unlock()
+        return count
     }
     
     public var keys: [K] {
-        return Array(dic.keys)
+        lock.lock()
+        let keys = Array(dic.keys)
+        lock.unlock()
+        return keys
     }
     
     public var values: [V] {
-        let arr = dic.values.map { (node) -> V in
+        lock.lock()
+        let values = dic.values.map { (node) -> V in
             node.val
         }
-        return arr
+        lock.unlock()
+        return values
     }
 }
