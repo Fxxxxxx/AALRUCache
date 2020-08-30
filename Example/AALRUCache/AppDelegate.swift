@@ -28,6 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 cache[i] = i
                 cache.append(i, i)
                 print(cache.get(i) ?? -1)
+                print("\(cache.values.count),\(cache.keys.count),\(cache.count)")
             }
         }
         group.notify(queue: DispatchQueue.global()) {

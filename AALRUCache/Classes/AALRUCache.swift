@@ -11,25 +11,25 @@ public class AALRUCache<K: Hashable, V: Equatable> {
     private var head: Node?
     private var tail: Node?
     private let maxCount: Int!
-    private let lock = NSLock.init()
+    private let semaphore = DispatchSemaphore.init(value: 1)
     
     public init(_ capacity: Int) {
         maxCount = capacity
     }
     
     public func get(_ key: K) -> V? {
-        lock.lock()
+        lock()
         if let node = dic[key] {
             bringToFirst(node)
-            lock.unlock()
+            unlock()
             return node.val
         }
-        lock.unlock()
+        unlock()
         return nil
     }
     
     public func put(_ key: K, _ value: V) {
-        lock.lock()
+        lock()
         if let node = dic[key] {
             node.val = value
             bringToFirst(node)
@@ -48,7 +48,7 @@ public class AALRUCache<K: Hashable, V: Equatable> {
                 tail = head
             }
         }
-        lock.unlock()
+        unlock()
     }
     
     private func bringToFirst(_ node: Node) {
@@ -67,6 +67,14 @@ public class AALRUCache<K: Hashable, V: Equatable> {
         head?.pre = node
         head = node
         head?.pre = nil
+    }
+    
+    private func lock() {
+        semaphore.wait()
+    }
+    
+    private func unlock() {
+        semaphore.signal()
     }
 }
 
@@ -89,16 +97,16 @@ public extension AALRUCache {
     }
     
     func removeAll() {
-        lock.lock()
+        lock()
         dic.removeAll()
         head = nil
         tail = nil
-        lock.unlock()
+        unlock()
     }
     
     @discardableResult
     func remove(_ key: K) -> V? {
-        lock.lock()
+        lock()
         if let node = dic[key] {
             if head === node {
                 head = node.next
@@ -111,44 +119,44 @@ public extension AALRUCache {
                 node.next?.pre = node.pre
             }
             dic.removeValue(forKey: key)
-            lock.unlock()
+            unlock()
             return node.val
         }
-        lock.unlock()
+        unlock()
         return nil
     }
     
     func key(for value: V) -> K? {
-        lock.lock()
+        lock()
         let result = dic.first(where: { (set) -> Bool in
             return value == set.value.val
         })?.key
-        lock.unlock()
+        unlock()
         return result
     }
 }
 
 extension AALRUCache {
     public var count: Int {
-        lock.lock()
+        lock()
         let count = dic.count
-        lock.unlock()
+        unlock()
         return count
     }
     
     public var keys: [K] {
-        lock.lock()
+        lock()
         let keys = Array(dic.keys)
-        lock.unlock()
+        unlock()
         return keys
     }
     
     public var values: [V] {
-        lock.lock()
+        lock()
         let values = dic.values.map { (node) -> V in
             node.val
         }
-        lock.unlock()
+        unlock()
         return values
     }
 }
